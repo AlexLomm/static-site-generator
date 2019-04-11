@@ -1,0 +1,6 @@
+<!-- Inject relevant javascript files -->
+{{#each (should-include htmlWebpackPlugin.options.filename htmlWebpackPlugin.files.js)}}
+  <script src="{{this}}"></script>
+{{/each}}
+</body>
+</html>
