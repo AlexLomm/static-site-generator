@@ -2,14 +2,17 @@ const path                 = require('path');
 const HtmlWebpackPlugin    = require('html-webpack-plugin');
 const CleanWebpackPlugin   = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const autoprefixer         = require('autoprefixer');
 const getFilePaths         = require('./get-file-paths');
+const noopPlugin           = require('noop-webpack-plugin');
+
+// TODO: extract prod logic
+const isProd = process.env.NODE_ENV === 'production';
 
 const hbsRegex = /\.(handlebars|hbs)$/;
 
 module.exports = {
-  mode: 'development',
-  devtool: 'inline-source-map',
+  mode: isProd ? 'production' : 'development',
+  devtool: isProd ? false : 'inline-source-map',
   entry: {
     // Global JS and CSS
     _global: path.resolve(__dirname, 'src', 'global.js'),
@@ -26,7 +29,7 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new MiniCssExtractPlugin(),
+    isProd ? new MiniCssExtractPlugin() : noopPlugin(),
     ...getFilePaths(
       path.resolve(__dirname, 'src', 'views', 'pages'),
       hbsRegex
@@ -76,15 +79,25 @@ module.exports = {
       {
         test: /\.(scss|css)$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          isProd ? MiniCssExtractPlugin.loader : 'style-loader',
           'css-loader',
           {
             loader: 'postcss-loader',
             options: {
+              // required, when {Function}/require is used (Complex Options)
+              // see: https://github.com/postcss/postcss-loader#plugins
+              ident: 'postcss',
               autoprefixer: {
                 browsers: ['last 2 versions']
               },
-              plugins: () => [autoprefixer]
+              plugins: (loader) => isProd ? [
+                require('postcss-import')({root: loader.resourcePath}),
+                require('postcss-preset-env')(),
+                isProd ? require('cssnano')() : null
+              ] : [
+                require('postcss-import')({root: loader.resourcePath}),
+                require('postcss-preset-env')(),
+              ]
             }
           },
           'sass-loader',
