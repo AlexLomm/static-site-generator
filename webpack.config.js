@@ -21,7 +21,7 @@ module.exports = {
 
     // Pages' JS and CSS
     ...getFilePaths(
-      path.resolve(__dirname, 'src', 'views', 'pages'),
+      path.resolve(__dirname, 'src', 'pages'),
       /\.js$/
     ).reduce((accumulator, {fileName, filePath}) => {
       // Rename home.scss and home.js to index.css and index.js
@@ -39,7 +39,7 @@ module.exports = {
     }]),
     new MiniCssExtractPlugin(),
     ...getFilePaths(
-      path.resolve(__dirname, 'src', 'views', 'pages'),
+      path.resolve(__dirname, 'src', 'pages'),
       hbsRegex
     ).map(({fileName, filePath}) => {
       return new HtmlWebpackPlugin({
@@ -72,7 +72,7 @@ module.exports = {
               path.resolve(__dirname, 'helpers')
             ],
             partialDirs: [
-              path.resolve(__dirname, 'src', 'views', 'partials')
+              path.resolve(__dirname, 'src', 'partials')
             ]
           }
         }
