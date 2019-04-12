@@ -4,12 +4,18 @@ const CleanWebpackPlugin   = require('clean-webpack-plugin');
 const CopyWebpackPlugin    = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const getFilePaths         = require('./get-file-paths');
+const postcssImport        = require('postcss-import');
+const postcssPresetEnv     = require('postcss-preset-env')();
+const cssnano              = require('cssnano')();
 
 // TODO: extract prod logic
 const isProd = process.env.NODE_ENV === 'production';
 
 const hbsRegex = /\.(handlebars|hbs)$/;
 
+// TODO: update webpack dev server (when the fix is available)
+// Problem: HMR does not work for multiple html entries currently
+// see: https://github.com/webpack/webpack/issues/7829
 module.exports = {
   mode: isProd ? 'production' : 'development',
   devtool: isProd ? false : 'inline-source-map',
@@ -110,12 +116,12 @@ module.exports = {
                 browsers: ['last 2 versions']
               },
               plugins: (loader) => isProd ? [
-                require('postcss-import')({root: loader.resourcePath}),
-                require('postcss-preset-env')(),
-                isProd ? require('cssnano')() : null
+                postcssImport({root: loader.resourcePath}),
+                postcssPresetEnv,
+                cssnano,
               ] : [
-                require('postcss-import')({root: loader.resourcePath}),
-                require('postcss-preset-env')(),
+                postcssImport({root: loader.resourcePath}),
+                postcssPresetEnv,
               ]
             }
           },
