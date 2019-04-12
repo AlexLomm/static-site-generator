@@ -1,6 +1,7 @@
 const path                 = require('path');
 const HtmlWebpackPlugin    = require('html-webpack-plugin');
 const CleanWebpackPlugin   = require('clean-webpack-plugin');
+const CopyWebpackPlugin    = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const getFilePaths         = require('./get-file-paths');
 
@@ -28,6 +29,10 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
+    new CopyWebpackPlugin([{
+      from: path.resolve(__dirname, 'static'),
+      to: path.resolve(__dirname, 'dist', 'static')
+    }]),
     new MiniCssExtractPlugin(),
     ...getFilePaths(
       path.resolve(__dirname, 'src', 'views', 'pages'),
@@ -109,20 +114,16 @@ module.exports = {
       },
       // Images
       {
-        test: /\.(png|svg|jpg|gif)$/,
+        test: /\.(gif|png|jpe?g|svg)$/,
         use: [
+          'file-loader',
           {
             loader: 'url-loader',
             options: {
               limit: 8192
             }
           },
-          {
-            loader: 'image-webpack-loader',
-            options: {
-              disable: true,
-            },
-          },
+          'image-webpack-loader'
         ]
       },
       // Fonts
