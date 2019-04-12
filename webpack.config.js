@@ -75,7 +75,7 @@ module.exports = {
             // supported well: https://github.com/pcardune/handlebars-loader/issues/37,
             // so something like <img src="./some-img.png"/> won't work
             helperDirs: [
-              path.resolve(__dirname, 'helpers')
+              path.resolve(__dirname, 'src', 'helpers')
             ],
             partialDirs: [
               path.resolve(__dirname, 'src', 'partials')
