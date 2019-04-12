@@ -28,7 +28,6 @@
     "image-webpack-loader": "^4.6.0",
     "mini-css-extract-plugin": "^0.6.0",
     "node-sass": "^4.11.0",
-    "noop-webpack-plugin": "^1.0.1",
     "postcss-import": "^12.0.1",
     "postcss-loader": "^3.0.0",
     "postcss-preset-env": "^6.6.0",

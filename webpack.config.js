@@ -3,7 +3,6 @@ const HtmlWebpackPlugin    = require('html-webpack-plugin');
 const CleanWebpackPlugin   = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const getFilePaths         = require('./get-file-paths');
-const noopPlugin           = require('noop-webpack-plugin');
 
 // TODO: extract prod logic
 const isProd = process.env.NODE_ENV === 'production';
@@ -29,7 +28,7 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
-    isProd ? new MiniCssExtractPlugin() : noopPlugin(),
+    new MiniCssExtractPlugin(),
     ...getFilePaths(
       path.resolve(__dirname, 'src', 'views', 'pages'),
       hbsRegex
@@ -77,9 +76,14 @@ module.exports = {
       },
       // CSS / SCSS
       {
-        test: /\.(scss|css)$/,
+        test: /\.(sa|sc|c)ss$/,
         use: [
-          isProd ? MiniCssExtractPlugin.loader : 'style-loader',
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: !isProd,
+            },
+          },
           'css-loader',
           {
             loader: 'postcss-loader',
