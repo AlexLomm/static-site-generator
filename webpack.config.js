@@ -15,6 +15,8 @@ module.exports = {
   devtool: isProd ? false : 'inline-source-map',
   entry: {
     // Global JS and CSS
+    // Prefixed by "_" to avoid accidental name
+    // collisions with generated page files
     _global: path.resolve(__dirname, 'src', 'global.js'),
 
     // Pages' JS and CSS
@@ -22,6 +24,8 @@ module.exports = {
       path.resolve(__dirname, 'src', 'views', 'pages'),
       /\.js$/
     ).reduce((accumulator, {fileName, filePath}) => {
+      // Rename home.scss and home.js to index.css and index.js
+      // respectively. See the explanation below
       accumulator[fileName === 'home' ? 'index' : fileName] = filePath;
 
       return accumulator;
@@ -42,6 +46,9 @@ module.exports = {
         inject: false,
         hash: true,
         template: filePath,
+        // In order to have `home` page accessible as a root page,
+        // rename home.hbs -> index.html. The same is done for
+        // the css and javascript files to keep everything consistent
         filename: `${fileName === 'home' ? 'index' : fileName}.html`,
       });
     }),
@@ -59,7 +66,8 @@ module.exports = {
           loader: 'handlebars-loader',
           options: {
             // Notice: inline requires, like in html-loader, aren't currently
-            // supported well: https://github.com/pcardune/handlebars-loader/issues/37
+            // supported well: https://github.com/pcardune/handlebars-loader/issues/37,
+            // so something like <img src="./some-img.png"/> won't work
             helperDirs: [
               path.resolve(__dirname, 'helpers')
             ],
