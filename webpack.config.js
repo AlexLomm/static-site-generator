@@ -58,6 +58,8 @@ module.exports = {
         use: {
           loader: 'handlebars-loader',
           options: {
+            // Notice: inline requires, like in html-loader, aren't currently
+            // supported well: https://github.com/pcardune/handlebars-loader/issues/37
             helperDirs: [
               path.resolve(__dirname, 'helpers')
             ],
