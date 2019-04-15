@@ -6,7 +6,7 @@ This project is a static site generator. It's main purpose is to be used for rap
 
 ## Concepts
 
-There are a few directories that have special meaning
+Check out the special conventions for this project below.
 
 ### Pages 
 
@@ -16,30 +16,38 @@ The pages must reside in `src/pages/`. Each page is also required to contain a H
 
 Additionally, every page is provided with global styles and scripts from `src/global.scss` and `src/global.js`.
 
+Please note, that `pages/home/` dir and all of it's contents will be output to `dist/` with the name "index" instead of "home". This is done to make home page accessible from the root url.
+
 ### Partials & Helpers
 
 `src/helpers/` and `src/partials/` directories, surprisingly enough, contain helpers and partials that are directly accessible from every page. Example:
 
-    <!-- "json" helper placed inside `src/helpers` -->
-    <pre>{{ json someObject }}</pre>
+```handlebars
+<!-- "json" helper placed inside `src/helpers` -->
+<pre>{{ json someObject }}</pre>
 
-    <!-- "footer.hbs" partial placed inside `src/partials` -->
-    <div>
-      {{> 'footer' }}
-    </div>
+<!-- "footer.hbs" partial placed inside `src/partials` -->
+<div>
+  {{> 'footer' }}
+</div>
+```
 
 Please note, that helpers and partials, which are placed outside of these directories, should be referenced with relative paths. Example:
 
-    <!-- "sidebar.hbs" partial placed *outside* `src/partials` -->
-    <div>
-      {{> '../../sidebar' }}
-    </div>
+```html
+<!-- "sidebar.hbs" partial placed *outside* `src/partials` -->
+<div>
+  {{> '../../sidebar' }}
+</div>
+```
 
 ### Static Files
 
 All of the static assets like images, fonts, etc. must be placed into the `/static/` directory. Then they can be referenced like following:
 
-    <img src="/static/example-image.png" />
+```html
+<img src="/static/example-image.png" />
+```
 
 ---
 
@@ -50,8 +58,12 @@ All of the static assets like images, fonts, etc. must be placed into the `/stat
 
 To launch the project in dev mode, run: 
 
-    npm run start
+```bash
+npm run start
+```
 
 To build it, run:
 
-    npm run build
+```bash
+npm run build
+```
